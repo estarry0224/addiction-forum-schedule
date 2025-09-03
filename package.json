@@ -1,6 +1,7 @@
 {
   "name": "중독포럼-일정관리",
   "version": "1.0.0",
+  "type": "module",
   "description": "(사)중독포럼 업무 일정관리 시스템",
   "main": "index.js",
   "scripts": {
