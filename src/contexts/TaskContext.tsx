@@ -503,10 +503,10 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({ children }) => {
           payload: { id, progress: 0, status: newStatus, priority: 'none' } 
         });
       } else if (newStatus === 'completed') {
-        // 상태를 '완료'로 변경할 때는 우선순위를 '낮음'으로 설정
+        // 상태를 '완료'로 변경할 때는 진행률을 100%로, 우선순위를 '낮음'으로 설정
         dispatch({ 
           type: 'UPDATE_PROGRESS_AND_STATUS', 
-          payload: { id, progress: task.progress, status: newStatus, priority: 'low' } 
+          payload: { id, progress: 100, status: newStatus, priority: 'low' } 
         });
       } else {
         // 다른 상태로 변경할 때는 기존 진행률과 우선순위 유지
@@ -538,9 +538,9 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({ children }) => {
       return 'completed';
     }
     
-    // 진행률이 0%일 때는 '취소' 상태로 설정
+    // 진행률이 0%일 때는 기존 상태 유지 (자동 취소하지 않음)
     if (progress === 0) {
-      return 'cancelled';
+      return task.status;
     }
     
     // 시작 기간이 도래하지 않은 경우
@@ -583,10 +583,10 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({ children }) => {
       if (autoStatus === 'completed') {
         newPriority = 'low';
       }
-      // 상태가 취소로 변경되면 우선순위를 취소로 설정
-      else if (autoStatus === 'cancelled') {
-        newPriority = 'cancelled';
-      }
+      // 진행률 0%일 때는 기존 우선순위 유지 (자동 취소하지 않음)
+      // else if (autoStatus === 'cancelled') {
+      //   newPriority = 'cancelled';
+      // }
       
       dispatch({ 
         type: 'UPDATE_PROGRESS_AND_STATUS', 

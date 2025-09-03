@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { useTaskContext } from '../contexts/TaskContext';
+import { useTaskContext } from '../contexts/TaskContextSupabase';
 import { TaskStatus, TaskPriority, TaskFilter } from '../types';
 import { 
   Plus, 

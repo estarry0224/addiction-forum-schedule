@@ -2,7 +2,7 @@ import { useState, useMemo, useEffect } from 'react';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { format, addMonths, subMonths, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, isToday } from 'date-fns';
 import { ko } from 'date-fns/locale';
-import { useTaskContext } from '../contexts/TaskContext';
+import { useTaskContext } from '../contexts/TaskContextSupabase';
 import { Task } from '../types';
 
 interface CalendarProps {

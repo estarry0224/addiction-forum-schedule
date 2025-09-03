@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { HashRouter as Router, Routes, Route } from 'react-router-dom' // ← HashRouter로 전환
 import Header from './components/Header'
 import Sidebar from './components/Sidebar'
 import Dashboard from './pages/Dashboard'
@@ -9,52 +9,58 @@ import TaskForm from './pages/TaskForm'
 import Settings from './pages/Settings'
 import UserManagement from './pages/UserManagement'
 import Login from './components/Login'
-import { TaskProvider } from './contexts/TaskContext'
+import { TaskProvider } from './contexts/TaskContextSupabase'
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+
+  // 🔸 배포 시마다 버전 문자열만 변경하세요 (캐시/이전 저장값 충돌 방지)
+  const APP_VERSION = '2025-09-04-1'
+  const K_LOGIN = `afs_${APP_VERSION}_isLoggedIn`
+  const K_LOGTIME = `afs_${APP_VERSION}_loginTime`
 
   useEffect(() => {
-    // 페이지 로드 시 로그인 상태 확인
     const checkLoginStatus = () => {
-      const loginStatus = localStorage.getItem('isLoggedIn');
-      const loginTime = localStorage.getItem('loginTime');
-      
+      const loginStatus = localStorage.getItem(K_LOGIN)
+      const loginTime = localStorage.getItem(K_LOGTIME)
+
       if (loginStatus === 'true' && loginTime) {
-        // 로그인 시간이 24시간 이내인지 확인
-        const loginDate = new Date(loginTime);
-        const now = new Date();
-        const hoursDiff = (now.getTime() - loginDate.getTime()) / (1000 * 60 * 60);
-        
+        const loginDate = new Date(loginTime)
+        const now = new Date()
+        const hoursDiff = (now.getTime() - loginDate.getTime()) / (1000 * 60 * 60)
+
         if (hoursDiff < 24) {
-          setIsLoggedIn(true);
+          setIsLoggedIn(true)
         } else {
-          // 24시간이 지났으면 로그인 상태 초기화
-          localStorage.removeItem('isLoggedIn');
-          localStorage.removeItem('loginTime');
-          setIsLoggedIn(false);
+          // 24시간 경과 → 로그인 만료
+          localStorage.removeItem(K_LOGIN)
+          localStorage.removeItem(K_LOGTIME)
+          setIsLoggedIn(false)
         }
       } else {
-        setIsLoggedIn(false);
+        setIsLoggedIn(false)
       }
-      setIsLoading(false);
-    };
+      setIsLoading(false)
+    }
 
-    checkLoginStatus();
-  }, []);
+    checkLoginStatus()
+  }, []) // 최초 1회
 
   const handleLogin = () => {
-    setIsLoggedIn(true);
-  };
+    setIsLoggedIn(true)
+    // 로그인 스탬프 저장(프리픽스 적용)
+    localStorage.setItem(K_LOGIN, 'true')
+    localStorage.setItem(K_LOGTIME, new Date().toISOString())
+  }
 
   const handleLogout = () => {
-    localStorage.removeItem('isLoggedIn');
-    localStorage.removeItem('loginTime');
-    setIsLoggedIn(false);
-  };
+    localStorage.removeItem(K_LOGIN)
+    localStorage.removeItem(K_LOGTIME)
+    setIsLoggedIn(false)
+  }
 
-  // 로딩 중일 때
+  // 로딩 중
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -63,15 +69,15 @@ function App() {
           <p className="text-gray-600">시스템을 불러오는 중...</p>
         </div>
       </div>
-    );
+    )
   }
 
-  // 로그인되지 않은 경우
+  // 미로그인 → 로그인 화면
   if (!isLoggedIn) {
-    return <Login onLogin={handleLogin} />;
+    return <Login onLogin={handleLogin} />
   }
 
-  // 로그인된 경우 메인 애플리케이션 표시
+  // 로그인됨 → 메인 앱
   return (
     <TaskProvider>
       <Router>

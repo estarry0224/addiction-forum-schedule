@@ -2,7 +2,7 @@ import React from 'react';
 import { X, Clock, AlertTriangle, Calendar } from 'lucide-react';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
-import { useTaskContext } from '../contexts/TaskContext';
+import { useTaskContext } from '../contexts/TaskContextSupabase';
 import { Task, TaskPriority, TaskStatus } from '../types';
 
 interface TodayTasksModalProps {
