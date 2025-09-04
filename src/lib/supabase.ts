@@ -18,29 +18,12 @@ function isValidUrl(url: string): boolean {
 let supabase: any;
 
 if (!supabaseUrl || !supabaseAnonKey || !isValidUrl(supabaseUrl)) {
-  console.warn('Missing or invalid Supabase environment variables. Creating mock client.');
-  // 더미 클라이언트 생성 (실제 Supabase 없이도 앱이 작동하도록)
-  supabase = {
-    auth: {
-      signInWithPassword: () => Promise.resolve({ error: null }),
-      signUp: () => Promise.resolve({ error: null }),
-      signOut: () => Promise.resolve(),
-      getSession: () => Promise.resolve({ data: { session: null }, error: null }),
-      onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } })
-    },
-    from: () => ({
-      select: () => Promise.resolve({ data: [], error: null }),
-      insert: () => Promise.resolve({ data: null, error: null }),
-      update: () => Promise.resolve({ data: null, error: null }),
-      delete: () => Promise.resolve({ data: null, error: null })
-    })
-  };
-} else {
-  try {
-    supabase = createClient(supabaseUrl, supabaseAnonKey);
-  } catch (error) {
-    console.error('Failed to create Supabase client:', error);
-    // 오류 발생 시 더미 클라이언트로 폴백
+  console.warn('Missing or invalid Supabase environment variables. Please check your .env file or GitHub Secrets.');
+  console.warn('Expected: VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY');
+  
+  // 개발 환경에서는 더미 클라이언트 사용
+  if (import.meta.env.DEV) {
+    console.warn('Running in development mode with mock client.');
     supabase = {
       auth: {
         signInWithPassword: () => Promise.resolve({ error: null }),
@@ -56,6 +39,17 @@ if (!supabaseUrl || !supabaseAnonKey || !isValidUrl(supabaseUrl)) {
         delete: () => Promise.resolve({ data: null, error: null })
       })
     };
+  } else {
+    // 프로덕션에서는 오류 발생
+    throw new Error('Supabase configuration is required for production deployment');
+  }
+} else {
+  try {
+    supabase = createClient(supabaseUrl, supabaseAnonKey);
+    console.log('Supabase client initialized successfully');
+  } catch (error) {
+    console.error('Failed to create Supabase client:', error);
+    throw error;
   }
 }
 
