@@ -15,7 +15,7 @@ const Sidebar: React.FC = () => {
   ];
 
   return (
-    <div className="w-64 bg-white shadow-sm border-r border-gray-200 min-h-screen">
+    <div className="w-64 min-w-64 bg-white shadow-sm border-r border-gray-200 min-h-screen flex-shrink-0">
       <nav className="mt-8">
         <div className="px-4">
           <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">
@@ -32,20 +32,20 @@ const Sidebar: React.FC = () => {
               <li key={item.path}>
                 <Link
                   to={item.path}
-                  className={`group flex items-center px-3 py-3 text-sm font-medium rounded-md transition-colors duration-200 ${
+                  className={`group flex items-center px-3 py-3 text-sm font-medium rounded-md transition-colors duration-200 min-w-0 ${
                     isActive
                       ? 'bg-primary-50 text-primary-700 border-r-2 border-primary-600'
                       : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
                   }`}
                 >
                   <Icon
-                    className={`mr-3 h-5 w-5 ${
+                    className={`mr-3 h-5 w-5 flex-shrink-0 ${
                       isActive ? 'text-primary-600' : 'text-gray-400 group-hover:text-gray-500'
                     }`}
                   />
-                  <div className="flex-1">
-                    <div className="font-medium">{item.label}</div>
-                    <div className={`text-xs ${
+                  <div className="flex-1 min-w-0">
+                    <div className="font-medium truncate">{item.label}</div>
+                    <div className={`text-xs truncate ${
                       isActive ? 'text-primary-600' : 'text-gray-500'
                     }`}>
                       {item.description}
@@ -58,12 +58,12 @@ const Sidebar: React.FC = () => {
         </ul>
       </nav>
       
-      <div className="absolute bottom-0 w-64 p-4 border-t border-gray-200">
+      <div className="absolute bottom-0 w-64 min-w-64 p-4 border-t border-gray-200">
         <div className="bg-gray-50 rounded-lg p-3">
           <h3 className="text-sm font-medium text-gray-900 mb-2">시스템 상태</h3>
           <div className="flex items-center space-x-2">
-            <div className="h-2 w-2 rounded-full bg-green-400"></div>
-            <span className="text-xs text-gray-600">정상 운영 중</span>
+            <div className="h-2 w-2 rounded-full bg-green-400 flex-shrink-0"></div>
+            <span className="text-xs text-gray-600 truncate">정상 운영 중</span>
           </div>
         </div>
       </div>
