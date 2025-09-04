@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { useTaskContext } from '../contexts/TaskContext';
+import { useTaskContext } from '../contexts/TaskContextSupabase';
 import { Task, TaskStatus } from '../types';
 import { format, addDays, startOfWeek, endOfWeek, eachDayOfInterval, isSameDay } from 'date-fns';
 import { ko } from 'date-fns/locale';
