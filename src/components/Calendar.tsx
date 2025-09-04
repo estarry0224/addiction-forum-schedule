@@ -69,17 +69,6 @@ const Calendar: React.FC<CalendarProps> = ({ isOpen, onClose, onDateSelect }) =>
       const endDateOnly = new Date(Date.UTC(endDate.getFullYear(), endDate.getMonth(), endDate.getDate()));
       const currentDateOnly = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
       
-      // 디버깅을 위한 로그 (나중에 제거)
-      if (task.title.includes('테스트') || task.title.includes('샘플')) {
-        console.log('Task:', task.title);
-        console.log('Start Date String:', task.startDate);
-        console.log('End Date String:', task.endDate);
-        console.log('Current Date String:', date.toISOString().split('T')[0]);
-        console.log('Start Date Only:', startDateOnly);
-        console.log('End Date Only:', endDateOnly);
-        console.log('Current Date Only:', currentDateOnly);
-        console.log('Is Included (Date):', currentDateOnly >= startDateOnly && currentDateOnly <= endDateOnly);
-      }
       
       return currentDateOnly >= startDateOnly && currentDateOnly <= endDateOnly;
     });
