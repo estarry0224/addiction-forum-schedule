@@ -56,12 +56,16 @@ const sampleTasks: Task[] = [
 ];
 
 const initialState: TaskState = {
-  tasks: [],
-  filteredTasks: [],
+  tasks: sampleTasks,
+  filteredTasks: sampleTasks,
   filter: {},
   loading: false,
   error: null,
-  users: []
+  users: [
+    { id: '1', name: '김에스더', departments: ['운영(실행)위원회'] },
+    { id: '2', name: '안유석', departments: ['운영(실행)위원회'] },
+    { id: '3', name: '김민한', departments: ['연구지원실'] }
+  ]
 };
 
 const taskReducer = (state: TaskState, action: TaskAction): TaskState => {
@@ -249,6 +253,13 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({ children }) => {
       dispatch({ type: 'SET_LOADING', payload: true });
       dispatch({ type: 'SET_ERROR', payload: null });
 
+      // Supabase 클라이언트가 제대로 초기화되었는지 확인
+      if (!supabase || typeof supabase.from !== 'function') {
+        console.warn('Supabase client not properly initialized, using sample data');
+        dispatch({ type: 'SET_TASKS', payload: sampleTasks });
+        return;
+      }
+
       const { data, error } = await supabase
         .from('tasks')
         .select('*')
@@ -293,6 +304,18 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({ children }) => {
 
   const loadUsers = async () => {
     try {
+      // Supabase 클라이언트가 제대로 초기화되었는지 확인
+      if (!supabase || typeof supabase.from !== 'function') {
+        console.warn('Supabase client not properly initialized, using default users');
+        const defaultUsers: User[] = [
+          { id: '1', name: '김에스더', departments: ['운영(실행)위원회'] },
+          { id: '2', name: '안유석', departments: ['운영(실행)위원회'] },
+          { id: '3', name: '김민한', departments: ['연구지원실'] }
+        ];
+        dispatch({ type: 'SET_USERS', payload: defaultUsers });
+        return;
+      }
+
       const { data, error } = await supabase
         .from('users')
         .select('*')
