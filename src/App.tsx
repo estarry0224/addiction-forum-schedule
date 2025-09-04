@@ -60,45 +60,42 @@ function App() {
     setIsLoggedIn(false)
   }
 
-  // 로딩 중
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">시스템을 불러오는 중...</p>
-        </div>
-      </div>
-    )
-  }
-
-  // 미로그인 → 로그인 화면
-  if (!isLoggedIn) {
-    return <Login onLogin={handleLogin} />
-  }
-
-  // 로그인됨 → 메인 앱
+  // TaskProvider로 전체 앱을 래핑
   return (
     <TaskProvider>
-      <Router>
-        <div className="min-h-screen bg-gray-50">
-          <Header onLogout={handleLogout} />
-          <div className="flex">
-            <Sidebar />
-            <main className="flex-1 p-6">
-              <Routes>
-                <Route path="/" element={<Dashboard />} />
-                <Route path="/tasks" element={<TaskList />} />
-                <Route path="/gantt" element={<GanttChart />} />
-                <Route path="/tasks/new" element={<TaskForm />} />
-                <Route path="/tasks/edit/:id" element={<TaskForm />} />
-                <Route path="/users" element={<UserManagement />} />
-                <Route path="/settings" element={<Settings />} />
-              </Routes>
-            </main>
+      {/* 로딩 중 */}
+      {isLoading ? (
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">시스템을 불러오는 중...</p>
           </div>
         </div>
-      </Router>
+      ) : !isLoggedIn ? (
+        /* 미로그인 → 로그인 화면 */
+        <Login onLogin={handleLogin} />
+      ) : (
+        /* 로그인됨 → 메인 앱 */
+        <Router>
+          <div className="min-h-screen bg-gray-50">
+            <Header onLogout={handleLogout} />
+            <div className="flex">
+              <Sidebar />
+              <main className="flex-1 p-6">
+                <Routes>
+                  <Route path="/" element={<Dashboard />} />
+                  <Route path="/tasks" element={<TaskList />} />
+                  <Route path="/gantt" element={<GanttChart />} />
+                  <Route path="/tasks/new" element={<TaskForm />} />
+                  <Route path="/tasks/edit/:id" element={<TaskForm />} />
+                  <Route path="/users" element={<UserManagement />} />
+                  <Route path="/settings" element={<Settings />} />
+                </Routes>
+              </main>
+            </div>
+          </div>
+        </Router>
+      )}
     </TaskProvider>
   )
 }
