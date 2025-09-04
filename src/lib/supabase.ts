@@ -33,10 +33,18 @@ if (!supabaseUrl || !supabaseAnonKey || !isValidUrl(supabaseUrl)) {
         onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } })
       },
       from: () => ({
-        select: () => Promise.resolve({ data: [], error: null }),
+        select: () => ({
+          order: () => Promise.resolve({ data: [], error: null }),
+          eq: () => Promise.resolve({ data: [], error: null }),
+          single: () => Promise.resolve({ data: null, error: null })
+        }),
         insert: () => Promise.resolve({ data: null, error: null }),
-        update: () => Promise.resolve({ data: null, error: null }),
-        delete: () => Promise.resolve({ data: null, error: null })
+        update: () => ({
+          eq: () => Promise.resolve({ data: null, error: null })
+        }),
+        delete: () => ({
+          eq: () => Promise.resolve({ data: null, error: null })
+        })
       })
     };
   } else {
